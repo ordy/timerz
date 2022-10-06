@@ -1,11 +1,14 @@
+import * as React from 'react';
 import { Component } from 'react';
 import { View } from 'react-native';
-import { Text } from 'react-native-paper';
+import { Button, Card, Dialog, Portal, Paragraph } from 'react-native-paper';
+import { COLORS } from '../constants/colors';
 
 class Timer extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
+			visible: false,
 			title: props.event.title,
 			date: props.event.date,
 			ticker: this.dateConversion(props.event.date),
@@ -16,9 +19,7 @@ class Timer extends Component {
 
 	componentWillUnmount = () => clearInterval(this.timerID);
 
-	tick = () => {
-		this.setState({ ticker: this.incrementTimer('seconds') });
-	};
+	tick = () => this.setState({ ticker: this.incrementTimer('seconds') });
 
 	incrementTimer(timeType) {
 		let timeMap = this.state.ticker;
@@ -61,6 +62,15 @@ class Timer extends Component {
 		return timeMap;
 	}
 
+	showDialog = () => this.setState({ visible: true });
+	hideDialog = () => this.setState({ visible: false });
+
+	resetTimer = () => {
+		const date = new Date();
+		this.setState({ ticker: this.dateConversion(date) });
+		this.setState({ visible: false });
+	};
+
 	dateConversion(date) {
 		const currentDate = new Date();
 		const diffTime = Math.abs(currentDate - date);
@@ -89,13 +99,31 @@ class Timer extends Component {
 		const d = this.state.ticker.get('days');
 		const M = this.state.ticker.get('months');
 		const y = this.state.ticker.get('years');
+
 		return (
-			<>
-				<Text variant='titleLarge'>{this.state.title}</Text>
-				<Text variant='bodyLarge'>
-					{y} Years, {M} Months, {d} Days, {h}h {m}m {s}s
-				</Text>
-			</>
+			<Card elevation={1} style={{ margin: 7, backgroundColor: COLORS.sBG }}>
+				<Card.Title title={this.state.title} />
+				<Card.Content>
+					<Paragraph>
+						{y} Years, {M} Months, {d} Days, {h}h {m}m {s}s
+					</Paragraph>
+				</Card.Content>
+				<Card.Actions>
+					<Button onPress={this.showDialog}>Reset</Button>
+					<Portal>
+						<Dialog visible={this.state.visible} onDismiss={this.hideDialog}>
+							<Dialog.Title>Reset</Dialog.Title>
+							<Dialog.Content>
+								<Paragraph>Are you sure you want to reset this timer?</Paragraph>
+							</Dialog.Content>
+							<Dialog.Actions>
+								<Button onPress={this.resetTimer}>Yes</Button>
+								<Button onPress={this.hideDialog}>No</Button>
+							</Dialog.Actions>
+						</Dialog>
+					</Portal>
+				</Card.Actions>
+			</Card>
 		);
 	};
 }
