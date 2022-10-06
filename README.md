@@ -1,3 +1,3 @@
 # Timerz
 
-Time tracking app created React-Native.
+Time tracking app created in React-Native.
