@@ -1,12 +1,14 @@
 import { Component } from 'react';
-import { Text, View } from 'react-native';
+import { View } from 'react-native';
+import { Text } from 'react-native-paper';
 
 class Timer extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			date: props.date,
-			ticker: this.dateConversion(props.date),
+			title: props.event.title,
+			date: props.event.date,
+			ticker: this.dateConversion(props.event.date),
 		};
 	}
 
@@ -62,7 +64,6 @@ class Timer extends Component {
 	dateConversion(date) {
 		const currentDate = new Date();
 		const diffTime = Math.abs(currentDate - date);
-		console.log(currentDate - date);
 		const timeMap = new Map();
 		const second = 1000;
 		const minute = second * 60;
@@ -73,8 +74,6 @@ class Timer extends Component {
 
 		timeMap.set('seconds', Math.round(diffTime / second) % 60);
 		timeMap.set('minutes', Math.round(diffTime / minute) % 60);
-		//		console.log(timeMap.get('minutes'));
-		//		console.log(timeMap.get('seconds'));
 
 		timeMap.set('hours', Math.round(diffTime / hour) % 24);
 		timeMap.set('days', Math.round(diffTime / day) % 30);
@@ -84,16 +83,19 @@ class Timer extends Component {
 	}
 
 	render = () => {
+		const s = this.state.ticker.get('seconds');
+		const m = this.state.ticker.get('minutes');
+		const h = this.state.ticker.get('hours');
+		const d = this.state.ticker.get('days');
+		const M = this.state.ticker.get('months');
+		const y = this.state.ticker.get('years');
 		return (
-			<View>
-				<Text>Date: {this.state.date}</Text>
-				<Text>Ticker value: {this.state.ticker.get('seconds')} for seconds</Text>
-				<Text>Ticker value: {this.state.ticker.get('minutes')} for minutes</Text>
-				<Text>Ticker value: {this.state.ticker.get('hours')} for hours</Text>
-				<Text>Ticker value: {this.state.ticker.get('days')} for days</Text>
-				<Text>Ticker value: {this.state.ticker.get('months')} for months</Text>
-				<Text>Ticker value: {this.state.ticker.get('years')} for years</Text>
-			</View>
+			<>
+				<Text variant='titleLarge'>{this.state.title}</Text>
+				<Text variant='bodyLarge'>
+					{y} Years, {M} Months, {d} Days, {h}h {m}m {s}s
+				</Text>
+			</>
 		);
 	};
 }

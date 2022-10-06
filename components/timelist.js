@@ -5,12 +5,17 @@ class TimeList extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			savedDates: ['1665064414620', '1664978400000'],
+			savedEvents: [
+				{ title: 'Task 1', date: '1665064414620' },
+				{ title: 'Task 2', date: '1664978400000' },
+			],
 		};
 	}
 
 	render = () => {
-		return <Timer date={this.state.savedDates[1]} />;
+		return this.state.savedEvents.map(date => {
+			return <Timer event={date} />;
+		});
 	};
 }
 export default TimeList;
