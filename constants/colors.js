@@ -1,6 +1,6 @@
 export const COLORS = {
 	pBG: '#f5f5f6',
-	sBG: '#e1e2e1',
+	sBG: '#f1f2f1',
 	primary: '#14213d',
 	pDark: '#000018',
 	pLight: '#3e4868',
