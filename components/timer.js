@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { Component } from 'react';
-import { View } from 'react-native';
 import { Button, Card, Dialog, Portal, Paragraph } from 'react-native-paper';
 import { COLORS } from '../constants/colors';
 
@@ -8,14 +7,19 @@ class Timer extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			visible: false,
+			resetVisible: false,
+			deleteVisible: false,
+			id: props.event.id,
 			title: props.event.title,
 			date: props.event.date,
+			delete: props.delete,
 			ticker: this.dateConversion(props.event.date),
 		};
 	}
 
-	componentDidMount = () => (this.TimerID = setInterval(() => this.tick(), 1000));
+	componentDidMount = () => {
+		this.TimerID = setInterval(() => this.tick(), 1000);
+	};
 
 	componentWillUnmount = () => clearInterval(this.timerID);
 
@@ -62,13 +66,24 @@ class Timer extends Component {
 		return timeMap;
 	}
 
-	showDialog = () => this.setState({ visible: true });
-	hideDialog = () => this.setState({ visible: false });
+	showDialog = (e, dialogType) => {
+		if (dialogType == 'delete') this.setState({ deleteVisible: true });
+		else this.setState({ resetVisible: true });
+	};
+
+	hideDialog = (e, name) => {
+		if (name == 'delete') this.setState({ deleteVisible: false });
+		else this.setState({ resetVisible: false });
+	};
 
 	resetTimer = () => {
 		const date = new Date();
 		this.setState({ ticker: this.dateConversion(date) });
 		this.setState({ visible: false });
+	};
+
+	deleteTimer = () => {
+		this.state.delete(this.state.id);
 	};
 
 	dateConversion(date) {
@@ -109,16 +124,30 @@ class Timer extends Component {
 					</Paragraph>
 				</Card.Content>
 				<Card.Actions>
-					<Button onPress={this.showDialog}>Reset</Button>
+					<Button onPress={e => this.showDialog(e, 'delete')}>Delete</Button>
 					<Portal>
-						<Dialog visible={this.state.visible} onDismiss={this.hideDialog}>
+						<Dialog visible={this.state.deleteVisible} onDismiss={e => this.hideDialog(e, 'delete')}>
+							<Dialog.Title>Delete</Dialog.Title>
+							<Dialog.Content>
+								<Paragraph>Are you sure you want to delete this timer?</Paragraph>
+							</Dialog.Content>
+							<Dialog.Actions>
+								<Button onPress={this.deleteTimer}>Yes</Button>
+								<Button onPress={e => this.hideDialog(e, 'detele')}>No</Button>
+							</Dialog.Actions>
+						</Dialog>
+					</Portal>
+
+					<Button onPress={e => this.showDialog(e, 'reset')}>Reset</Button>
+					<Portal>
+						<Dialog visible={this.state.resetVisible} onDismiss={() => this.hideDialog('reset')}>
 							<Dialog.Title>Reset</Dialog.Title>
 							<Dialog.Content>
 								<Paragraph>Are you sure you want to reset this timer?</Paragraph>
 							</Dialog.Content>
 							<Dialog.Actions>
 								<Button onPress={this.resetTimer}>Yes</Button>
-								<Button onPress={this.hideDialog}>No</Button>
+								<Button onPress={e => this.hideDialog(e, 'reset')}>No</Button>
 							</Dialog.Actions>
 						</Dialog>
 					</Portal>
