@@ -5,6 +5,7 @@ import TimeList from './components/timelist';
 import Navbar from './components/navbar';
 import { StatusBar } from 'expo-status-bar';
 import { COLORS } from './constants/colors';
+import GlobalState from './context/globalstate';
 
 const theme = {
 	...DefaultTheme,
@@ -22,9 +23,11 @@ class App extends Component {
 	render() {
 		return (
 			<PaperProvider theme={theme}>
-				<Navbar />
-				<TimeList />
-				<StatusBar></StatusBar>
+				<GlobalState>
+					<Navbar />
+					<TimeList />
+					<StatusBar></StatusBar>
+				</GlobalState>
 			</PaperProvider>
 		);
 	}
