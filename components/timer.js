@@ -2,6 +2,7 @@ import * as React from 'react';
 import { Component } from 'react';
 import { Button, Card, Dialog, Portal, Paragraph } from 'react-native-paper';
 import { COLORS } from '../constants/colors';
+import Context from '../context/context';
 
 class Timer extends Component {
 	constructor(props) {
@@ -16,6 +17,8 @@ class Timer extends Component {
 			ticker: this.dateConversion(props.event.date),
 		};
 	}
+
+	static contextType = Context;
 
 	componentDidMount = () => {
 		this.TimerID = setInterval(() => this.tick(), 1000);
@@ -79,11 +82,11 @@ class Timer extends Component {
 	resetTimer = () => {
 		const date = new Date();
 		this.setState({ ticker: this.dateConversion(date) });
-		this.setState({ visible: false });
+		this.setState({ resetVisible: false });
 	};
 
 	deleteTimer = () => {
-		this.state.delete(this.state.id);
+		this.context.deleteTimer(this.state.id);
 	};
 
 	dateConversion(date) {
