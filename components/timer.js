@@ -136,7 +136,7 @@ class Timer extends Component {
 							</Dialog.Content>
 							<Dialog.Actions>
 								<Button onPress={this.deleteTimer}>Yes</Button>
-								<Button onPress={e => this.hideDialog(e, 'detele')}>No</Button>
+								<Button onPress={e => this.hideDialog(e, 'delete')}>No</Button>
 							</Dialog.Actions>
 						</Dialog>
 					</Portal>
