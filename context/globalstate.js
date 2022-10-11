@@ -16,7 +16,6 @@ class GlobalState extends Component {
 	};
 
 	deleteTimer = id => {
-		console.log('delete called');
 		const filteredList = this.state.savedEvents.filter(el => {
 			return el.id != id;
 		});
